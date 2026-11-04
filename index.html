@@ -550,7 +550,7 @@ footer .label{margin:0;color:var(--ink)}
         <div class="m-part m-nav" data-part="nav"><span class="lbl">меню</span><span>Головна</span><span>Новини</span><span>Спорт</span><span>Фото</span></div>
         <div class="m-row">
           <div class="m-part m-main" data-part="main"><span class="lbl">основний вміст</span>
-            <div class="m-art"><div class="m-img"></div><div><h5>7-Б переміг у турнірі з шахів</h5><p>Фінальна партія тривала дві перерви поспіль.</p></div></div>
+            <div class="m-art"><div class="m-img"></div><div><h5>7-Г переміг у турнірі з шахів</h5><p>Фінальна партія тривала дві перерви поспіль.</p></div></div>
             <div class="m-art"><div class="m-img"></div><div><h5>У їдальні — новий салат</h5><p>Учні оцінили його на 4 з 5.</p></div></div>
           </div>
           <div class="m-part m-aside" data-part="aside"><span class="lbl">бічна панель</span><h5>Розклад дзвінків</h5><div><span>1 урок</span><span>8:30</span></div><div><span>2 урок</span><span>9:25</span></div><div><span>3 урок</span><span>10:30</span></div></div>
@@ -694,7 +694,7 @@ footer .label{margin:0;color:var(--ink)}
       <div class="task-head"><span class="label">Завдання</span><span class="tag">онлайн-редактор</span><span class="tag">≈ 25 хв</span><span class="tag">11 балів</span></div>
       <div class="form-row">
         <label>Прізвище та ім’я<input id="pxName" maxlength="60" autocomplete="off" placeholder="Наприклад: Коваль Олена"></label>
-        <label>Клас<select id="pxClass"><option>7-Б</option><option>7-В</option><option value="інший">інший</option></select></label>
+        <label>Клас<select id="pxClass"><option>7-Г</option><option value="інший">інший</option></select></label>
         <label>Завдання<select id="pxTask"><option value="practice">Практична робота (на уроці)</option><option value="homework">Домашнє завдання</option></select></label>
       </div>
       <div class="notice"><b>Чесна гра.</b> Редактор записує, як ти набираєш код: час роботи, видалення, спроби вставити текст і виходи з цієї сторінки. Учитель бачить цю статистику. Вставка (Ctrl+V) вимкнена.</div>
@@ -768,9 +768,11 @@ footer .label{margin:0;color:var(--ink)}
    Вставте сюди URL вебзастосунку Google Apps Script (закінчується на /exec).
    Поки рядок порожній, кнопка «Здати» пропонує завантажити файл роботи.
    ========================================================= */
-const API_URL_DEFAULT = 'https://script.google.com/a/macros/tl.kyiv.ua/s/AKfycbyyLmMiC6ts6U6-d3KGT967C_9YDjEq5HZcgzFEROW9lpW2SnUX1cUOyrD9mlKscAU/exec';
+const API_URL_DEFAULT = 'https://script.google.com/macros/s/AKfycbyyLmMiC6ts6U6-d3KGT967C_9YDjEq5HZcgzFEROW9lpW2SnUX1cUOyrD9mlKscAU/exec';
 
-const API_URL = (new URLSearchParams(location.search).get('api') || API_URL_DEFAULT).trim();
+// Адресу шкільного домену (…/a/macros/домен/s/…) перетворюємо на загальну (…/macros/s/…):
+// учні здають роботу без входу в акаунт, а доменна адреса вимагає входу.
+const API_URL = (new URLSearchParams(location.search).get('api') || API_URL_DEFAULT).trim().replace(/\/a\/macros\/[^/]+\/s\//, '/macros/s/');
 const STORE = 'htmlLesson.v1.';
 
 /* ---------- спільні помічники ---------- */
@@ -1381,7 +1383,7 @@ const Px = (() => {
   $('#pxSubmit').onclick = submit;
 
   const last = store('last');
-  if (last) { $('#pxClass').value = last.klass || '7-Б'; $('#pxTask').value = last.task || 'practice'; }
+  if (last) { const cls = $('#pxClass'); cls.value = last.klass || '7-Г'; if (!cls.value) cls.value = '7-Г'; $('#pxTask').value = last.task || 'practice'; }
 
   return { get state() { return S; } };
 })();
